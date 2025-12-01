@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "9CE681C4-B973-486C-B6CE-F9F3A2F9A912",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "AdventOfCode",
+          "name" : "AdventOfCode"
+        }
+      ]
+    },
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:",
+      "identifier" : "AdventOfCode",
+      "name" : "AdventOfCode"
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AdventOfCodeTests",
+        "name" : "AdventOfCodeTests"
+      }
+    }
+  ],
+  "version" : 1
+}

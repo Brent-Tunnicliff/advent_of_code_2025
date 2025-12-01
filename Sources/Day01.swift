@@ -13,6 +13,14 @@ struct Day01: AdventDay {
     }
 
     func part1() -> Int {
+        countZeroClicks(countOnlyEndPosition: true)
+    }
+
+    func part2() -> Int {
+        countZeroClicks(countOnlyEndPosition: false)
+    }
+
+    private func countZeroClicks(countOnlyEndPosition: Bool) -> Int {
         var position = 50
         var result = 0
 
@@ -21,10 +29,15 @@ struct Day01: AdventDay {
                 preconditionFailure("Unable to parse row: \(row)")
             }
 
+            let isStartingPlaceLowerBound = position == rangerOfClicksPerRotation.lowerBound
+            var didClickLowerBound = false
             let clickLimit = rangerOfClicksPerRotation.count
             var reducedClicks = clicks
             while reducedClicks > clickLimit {
                 reducedClicks -= clickLimit
+                if !countOnlyEndPosition {
+                    result += 1
+                }
             }
 
             let adjustedClicks = direction == "R" ? reducedClicks : -reducedClicks
@@ -34,13 +47,23 @@ struct Day01: AdventDay {
                 newValidPosition = newPosition
             } else if newPosition < rangerOfClicksPerRotation.lowerBound {
                 newValidPosition = newPosition + rangerOfClicksPerRotation.upperBound
+                didClickLowerBound = true
             } else {
                 newValidPosition = newPosition - rangerOfClicksPerRotation.upperBound
+                didClickLowerBound = true
             }
 
-            print("newPosition: \(newValidPosition)")
-            if newValidPosition == 0 {
-                result += 1
+            if countOnlyEndPosition {
+                if newValidPosition == 0 {
+                    result += 1
+                }
+            } else {
+                let shouldCountLowerBoundClick =
+                    newValidPosition == 0
+                    || (!isStartingPlaceLowerBound && didClickLowerBound)
+                if shouldCountLowerBoundClick {
+                    result += 1
+                }
             }
 
             position = newValidPosition
@@ -48,8 +71,4 @@ struct Day01: AdventDay {
 
         return result
     }
-
-//    func part2() -> Int {
-//
-//    }
 }

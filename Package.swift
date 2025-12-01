@@ -1,13 +1,5 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 import PackageDescription
-
-let dependencies: [Target.Dependency] = [
-    .product(name: "Algorithms", package: "swift-algorithms"),
-    .product(name: "Collections", package: "swift-collections"),
-    .product(name: "ArgumentParser", package: "swift-argument-parser"),
-    .product(name: "SwiftPriorityQueue", package: "SwiftPriorityQueue"),
-    .product(name: "AOCHelper", package: "advent_of_code_helper"),
-]
 
 let package = Package(
     name: "AdventOfCode",
@@ -41,18 +33,46 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "AdventOfCode",
-            dependencies: dependencies,
-            resources: [.copy("Data")],
-            plugins: [
-                .plugin(name: "LintBuildPlugin", package: "swift-format-plugin")
-            ]
+            dependencies: [
+                .product(name: "Algorithms", package: "swift-algorithms"),
+                .product(name: "Collections", package: "swift-collections"),
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "SwiftPriorityQueue", package: "SwiftPriorityQueue"),
+                .product(name: "AOCHelper", package: "advent_of_code_helper"),
+            ],
+            resources: [.copy("Data")]
         ),
         .testTarget(
             name: "AdventOfCodeTests",
-            dependencies: ["AdventOfCode"] + dependencies,
-            plugins: [
-                .plugin(name: "LintBuildPlugin", package: "swift-format-plugin")
-            ]
+            dependencies: ["AdventOfCode"]
         )
     ]
 )
+
+// MARK: - Common target settings
+
+// Sets values that are common for every target.
+for target in package.targets {
+
+    // MARK: Plugins
+
+    let plugins = target.plugins ?? []
+    target.plugins = plugins + [
+        .plugin(name: "LintBuildPlugin", package: "swift-format-plugin")
+    ]
+
+    // MARK: Swift compliler settings
+
+    let swiftSettings = target.swiftSettings ?? []
+    target.swiftSettings = swiftSettings + [
+        .strictMemorySafety(),
+
+        // Feature flags
+
+        .enableUpcomingFeature("ExistentialAny"),
+        .enableUpcomingFeature("InferIsolatedConformances"),
+        .enableUpcomingFeature("InternalImportsByDefault"),
+        .enableUpcomingFeature("MemberImportVisibility"),
+        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+    ]
+}

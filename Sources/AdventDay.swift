@@ -3,7 +3,7 @@
 import Foundation
 
 protocol AdventDay: Sendable {
-    associatedtype Answer = Int
+    associatedtype Answer: Sendable = Int
 
     /// The day of the Advent of Code challenge.
     ///
@@ -61,7 +61,12 @@ extension AdventDay {
     }
 
     static func loadData(challengeDay: Int) -> String {
-        let dayString = String(format: "%02d", challengeDay)
+        let numberFormatter = NumberFormatter()
+        numberFormatter.minimumIntegerDigits = 2
+        guard let dayString = numberFormatter.string(for: challengeDay) else {
+            preconditionFailure("Unable to format day number: \(challengeDay)")
+        }
+
         let dataFilename = "Day\(dayString)"
         let dataURL = Bundle.module.url(
             forResource: dataFilename,

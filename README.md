@@ -8,11 +8,10 @@ But feel free to use it if you want.
 
 ## Setup
 
-1. Create a private submodule in `Sources/Data` to stick to the license that states the input files are not to be publicly shared.
+The contents of `Sources/Data` are in gitignore to stick to the license that states the input files are not to be publicly shared.
+But add the downloaded files there anyway and it will work. Just note that I no longer configure these with private submodules of data, it is a manual process to populate after clone.
 
-2. This project has a pipeline configured. To have it access the submodule, create an access token that has read access to it, then add it to this repo as a secret named `CI_TOKEN`.
-
-3. Read and follow the below "Original readme contents" for additional instructions.
+Read and follow the below "Original readme contents" for additional instructions.
 
 # Original readme contents
 

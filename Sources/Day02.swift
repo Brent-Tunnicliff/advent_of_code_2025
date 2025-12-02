@@ -42,8 +42,57 @@ struct Day02: AdventDay {
         return result
     }
 
-//    func part2() -> Int {
-//    }
+    func part2() -> Int {
+        var result = 0
+
+        for range in ranges {
+            let lowerBoundSplit = split(number: range.lowerBound, removeMoreWhenOdd: true)
+            let upperBoundSplit = split(number: range.upperBound, removeMoreWhenOdd: false)
+            let rangeOfPossibleValues = lowerBoundSplit...upperBoundSplit
+            var includingRepeating: Set<Int> = []
+            for possibleValue in rangeOfPossibleValues {
+                for numberToDrop in (0..<possibleValue.description.count) {
+                    let string = possibleValue.description.dropLast(numberToDrop)
+                    guard let initialValue = Int(string) else {
+                        preconditionFailure("Couldn't convert '\(string)' to Int")
+                    }
+
+                    var value = initialValue
+                    while value.description.count < range.lowerBound.description.count {
+                        let combined = "\(value)\(initialValue)"
+                        guard let newValue = Int(combined) else {
+                            preconditionFailure("Couldn't convert '\(combined)' to Int")
+                        }
+
+                        value = newValue
+                    }
+
+                    // Add value, we see a case in the input data of single digits,
+                    // but we don't want those.
+                    if value.description.count > 1 {
+                        includingRepeating.insert(value)
+                    }
+
+                    // Keep going until we reach the upper bound length.
+                    while value.description.count <= range.upperBound.description.count {
+                        let combined = "\(value)\(initialValue)"
+                        guard let newValue = Int(combined) else {
+                            preconditionFailure("Couldn't convert '\(combined)' to Int")
+                        }
+
+                        value = newValue
+                        includingRepeating.insert(value)
+                    }
+                }
+            }
+
+            for number in includingRepeating where range.contains(number) {
+                result += number
+            }
+        }
+
+        return result
+    }
 
     /// Returns the first half digits for a number.
     private func split(number: Int, removeMoreWhenOdd: Bool) -> Int {

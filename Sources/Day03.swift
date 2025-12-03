@@ -11,11 +11,7 @@ struct Day03: AdventDay {
             .split(separator: "\n")
             .map { row in
                 row.map {
-                    guard let number = Int($0.description) else {
-                        preconditionFailure("Unable to convert '\($0)' to Int")
-                    }
-
-                    return number
+                    $0.toInt()
                 }
             }
     }
@@ -40,11 +36,7 @@ struct Day03: AdventDay {
                         continue
                     }
 
-                    let joltageString = "\(instance.element)\(secondDigit)"
-                    guard let joltage = Int(joltageString) else {
-                        preconditionFailure("Unable to convert '\(joltageString)' to Int")
-                    }
-
+                    let joltage = "\(instance.element)\(secondDigit)".toInt()
                     if (largestJoltage ?? 0) < joltage {
                         largestJoltage = joltage
                     }
@@ -64,6 +56,69 @@ struct Day03: AdventDay {
         return result
     }
 
-//    func part2() -> Int {
-//    }
+    func part2() async -> Int {
+        await withTaskGroup { group in
+            for bank in banks {
+                group.addTask {
+                    let enumeratedBank = Array(bank.enumerated())
+                    return calculateLargestJoltage(
+                        for: enumeratedBank,
+                        currentJoltageDigits: [],
+                        numberOfDigits: 12
+                    ) ?? 0
+                }
+            }
+
+            var result = 0
+            for await largestJoltage in group {
+                result += largestJoltage
+            }
+
+            return result
+        }
+    }
+
+    private func calculateLargestJoltage(
+        for bankEnumerated: [EnumeratedSequence<[Int]>.Element],
+        currentJoltageDigits: [EnumeratedSequence<[Int]>.Element],
+        numberOfDigits: Int
+    ) -> Int? {
+        guard currentJoltageDigits.count < numberOfDigits else {
+            // Found a solution
+            return currentJoltageDigits.map(\.element.description)
+                .joined()
+                .toInt()
+        }
+
+        let lastDigitOffset = currentJoltageDigits.last?.offset ?? -1
+
+        var filteredNumbers = bankEnumerated.filter { $0.offset > lastDigitOffset }
+            .map(\.element)
+            .toSet()
+
+        while !filteredNumbers.isEmpty {
+            guard let nextDigit = filteredNumbers.max() else {
+                preconditionFailure("Array is not empty, but there is no max number?")
+            }
+
+            let allValues = bankEnumerated.filter { $0.element == nextDigit && $0.offset > lastDigitOffset }
+                .compactMap {
+                    let newCurrentJoltageDigits = currentJoltageDigits + [$0]
+                    return calculateLargestJoltage(
+                        for: bankEnumerated,
+                        currentJoltageDigits: newCurrentJoltageDigits,
+                        numberOfDigits: numberOfDigits
+                    )
+                }
+
+            guard let potentialResult = allValues.max() else {
+                filteredNumbers.remove(nextDigit)
+                continue
+            }
+
+            return potentialResult
+        }
+
+        return nil
+    }
 }

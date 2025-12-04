@@ -5,6 +5,7 @@ import Algorithms
 
 struct Day04: AdventDay {
     let data: String
+    private let neighboringToiletPaperCountLimit = 4
     private let toiletPaper = "@"
 
     private var grid: Grid<Coordinates, String> {
@@ -12,9 +13,39 @@ struct Day04: AdventDay {
     }
 
     func part1() -> Int {
-        let neighboringToiletPaperCountLimit = 4
-        let grid = grid
+        getAccessibleForkLiftCount(
+            grid: grid,
+            removeFromGridWhenCounted: false
+        ).result
+    }
+
+    func part2() -> Int {
+        var latestGrid = grid
         var result = 0
+        while true {
+            let (count, newGrid) = getAccessibleForkLiftCount(
+                grid: latestGrid,
+                removeFromGridWhenCounted: true
+            )
+
+            // If no more results then break
+            guard count > 0 else {
+                break
+            }
+
+            result += count
+            latestGrid = newGrid
+        }
+
+        return result
+    }
+
+    private func getAccessibleForkLiftCount(
+        grid: Grid<Coordinates, String>,
+        removeFromGridWhenCounted: Bool
+    ) -> (result: Int, grid: Grid<Coordinates, String>) {
+        var result = 0
+        var grid = grid
         for (coordinates, value) in grid.values where value == toiletPaper {
             let neighbors = product(
                 [coordinates.x - 1, coordinates.x, coordinates.x + 1],
@@ -32,13 +63,13 @@ struct Day04: AdventDay {
 
             if neighboringToiletPaperCount < neighboringToiletPaperCountLimit {
                 result += 1
+
+                if removeFromGridWhenCounted {
+                    grid = grid.removing(keys: [coordinates])
+                }
             }
         }
 
-        return result
+        return (result, grid)
     }
-
-//    func part2() -> Int {
-//        
-//    }
 }

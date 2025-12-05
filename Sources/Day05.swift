@@ -34,6 +34,47 @@ struct Day05: AdventDay {
         return result
     }
 
-//    func part2() -> Int {
-//    }
+    func part2() -> Int {
+        let (freshRanges, _) = databaseData
+        var freshIngredients: [ClosedRange<Int>] = []
+
+        for (offset, freshRange) in freshRanges.enumerated() {
+            print("\(offset + 1)/\(freshRanges.count)")
+
+            let intersectingRanges = freshIngredients.filter {
+                $0.overlaps(freshRange)
+            }
+
+            guard !intersectingRanges.isEmpty else {
+                freshIngredients.append(freshRange)
+                continue
+            }
+
+            var reducedFreshRanges: [ClosedRange<Int>] = [freshRange]
+            for intersectingRange in intersectingRanges {
+                var newReducedFreshRanges: [ClosedRange<Int>] = []
+                for reducedFreshRange in reducedFreshRanges {
+                    if reducedFreshRange.lowerBound < intersectingRange.lowerBound {
+                        let newUpperBound = intersectingRange.lowerBound - 1
+                        newReducedFreshRanges.append(reducedFreshRange.lowerBound...newUpperBound)
+                    }
+                    if reducedFreshRange.upperBound > intersectingRange.upperBound {
+                        let newLowerBound = intersectingRange.upperBound + 1
+                        newReducedFreshRanges.append(newLowerBound...reducedFreshRange.upperBound)
+                    }
+                }
+
+                reducedFreshRanges = newReducedFreshRanges
+            }
+
+            freshIngredients.append(contentsOf: reducedFreshRanges)
+        }
+
+        var result = 0
+        for freshIngredient in freshIngredients {
+            result += freshIngredient.count
+        }
+
+        return result
+    }
 }

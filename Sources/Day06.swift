@@ -6,7 +6,7 @@ import Algorithms
 struct Day06: AdventDay {
     let data: String
 
-    private var homework: [(numbers: [Int], symbol: ProblemSymbol)] {
+    private var partOneHomework: [(numbers: [Int], symbol: ProblemSymbol)] {
         let rows = self.data.trimmingWhitespaces().split(separator: "\n")
 
         var symbols: [ProblemSymbol] = []
@@ -31,7 +31,49 @@ struct Day06: AdventDay {
     }
 
     func part1() -> Int {
-        let homework = homework
+        calculate(homework: partOneHomework)
+    }
+
+    private var partTwoHomework: [(numbers: [Int], symbol: ProblemSymbol)] {
+        let rows = self.data.trimmingWhitespaces().split(separator: "\n")
+        let numberRows = rows.dropLast()
+
+        let symbolsRow = rows[rows.count - 1]
+        let symbolIndexes = symbolsRow.enumerated().filter { $0.element != " " }
+        var homework: [(numbers: [Int], symbol: ProblemSymbol)] = []
+        for (symbolOffset, symbolString) in symbolIndexes {
+            let symbol = ProblemSymbol(rawValue: symbolString.toString())
+            let upperBound = (symbolIndexes.first(where: { $0.offset > symbolOffset })?.offset ?? data.count) - 1
+            let range = symbolOffset...upperBound
+            var numbers: [Int] = []
+            for numberOffset in range.reversed() {
+                var digits: [Int] = []
+                for row in numberRows {
+                    guard let digit = row.dropFirst(numberOffset).first, let number = Int(digit.toString()) else {
+                        continue
+                    }
+
+                    digits.append(number)
+                }
+
+                guard !digits.isEmpty else {
+                    continue
+                }
+
+                numbers.append(digits.map(\.description).joined().toInt())
+            }
+
+            homework.append((numbers, symbol))
+        }
+
+        return homework
+    }
+
+    func part2() -> Int {
+        calculate(homework: partTwoHomework)
+    }
+
+    private func calculate(homework: [(numbers: [Int], symbol: ProblemSymbol)]) -> Int {
         var result = 0
         for (numbers, symbol) in homework {
             var current: Int = numbers[0]
@@ -40,15 +82,10 @@ struct Day06: AdventDay {
             }
 
             result += current
-            print("\(symbol), \(current), \(numbers)")
         }
 
         return result
     }
-
-//    func part2() -> Int {
-//
-//    }
 }
 
 private enum ProblemSymbol {

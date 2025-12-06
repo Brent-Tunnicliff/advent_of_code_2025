@@ -15,12 +15,12 @@ struct Day06Tests {
     @Test
     func testPart1() {
         let challenge = Day06(data: testData)
-        #expect(challenge.part1() == 4277556)
+        #expect(challenge.part1() == 4_277_556)
     }
 
-//    @Test
-//    func testPart2() async {
-//        let challenge = Day06(data: testData)
-//        #expect(challenge.part2() == )
-//    }
+    @Test
+    func testPart2() async {
+        let challenge = Day06(data: testData)
+        #expect(challenge.part2() == 3_263_827)
+    }
 }

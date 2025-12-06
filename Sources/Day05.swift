@@ -38,9 +38,7 @@ struct Day05: AdventDay {
         let (freshRanges, _) = databaseData
         var freshIngredients: [ClosedRange<Int>] = []
 
-        for (offset, freshRange) in freshRanges.enumerated() {
-            print("\(offset + 1)/\(freshRanges.count)")
-
+        for freshRange in freshRanges {
             let intersectingRanges = freshIngredients.filter {
                 $0.overlaps(freshRange)
             }

@@ -10,8 +10,8 @@ struct Day07: AdventDay {
     private let beam = "|"
     private let splitter = "^"
 
-    private var grid: Grid<Coordinates, String> {
-        Grid(data: data)
+    private var grid: ImmutableGrid<Coordinates, String> {
+        ImmutableGrid(data: data)
     }
 
     func part1() -> Int {
@@ -43,40 +43,40 @@ struct Day07: AdventDay {
         }
     }
 
-    func part2() async -> Int {
+    func part2() -> Int {
         let gird = self.grid
         guard let startingPosition = grid.values.first(where: { $0.value == startPosition })?.key else {
             preconditionFailure("No starting position")
         }
 
-        let cache = Cache<Coordinates, Int>()
-        return await possibleTimelines(position: startingPosition.next(in: .south), gird: gird, cache: cache)
+        let cache = SimpleCache<Coordinates, Int>()
+        return possibleTimelines(position: startingPosition.next(in: .south), gird: gird, cache: cache)
     }
 
     private func possibleTimelines(
         position: Coordinates,
-        gird: Grid<Coordinates, String>,
-        cache: Cache<Coordinates, Int>
-    ) async -> Int {
-        if let cachedValue = await cache.object(for: position) {
+        gird: ImmutableGrid<Coordinates, String>,
+        cache: SimpleCache<Coordinates, Int>
+    ) -> Int {
+        if let cachedValue = cache[position] {
             return cachedValue
         }
 
         let result: Int
         switch gird[position] {
         case emptySpace:
-            result = await possibleTimelines(
+            result = possibleTimelines(
                 position: position.next(in: .south),
                 gird: gird.adding([position: beam]),
                 cache: cache
             )
         case splitter:
-            let westResult = await possibleTimelines(
+            let westResult = possibleTimelines(
                 position: position.next(in: .west),
                 gird: gird.adding([position: beam]),
                 cache: cache
             )
-            let eastResult = await possibleTimelines(
+            let eastResult = possibleTimelines(
                 position: position.next(in: .east),
                 gird: gird.adding([position: beam]),
                 cache: cache
@@ -89,7 +89,7 @@ struct Day07: AdventDay {
             result = 0
         }
 
-        await cache.set(result, for: position)
+        cache[position] = result
 
         return result
     }

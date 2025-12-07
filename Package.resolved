@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brent-Tunnicliff/advent_of_code_helper",
       "state" : {
-        "revision" : "1fc60afcec823cbf65c9435c0d5f65b06a45609f",
-        "version" : "0.3.0"
+        "revision" : "655ed4294f3a5d41d41e155cce87e730eabea9b0",
+        "version" : "0.4.0"
       }
     },
     {

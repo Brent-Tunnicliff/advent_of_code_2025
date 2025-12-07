@@ -33,6 +33,6 @@ struct Day07Tests {
     @Test
     func testPart2() async {
         let challenge = Day07(data: testData)
-        await #expect(challenge.part2() == 40)
+        #expect(challenge.part2() == 40)
     }
 }

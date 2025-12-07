@@ -8,8 +8,8 @@ struct Day04: AdventDay {
     private let neighboringToiletPaperCountLimit = 4
     private let toiletPaper = "@"
 
-    private var grid: Grid<Coordinates, String> {
-        Grid(data: data)
+    private var grid: ImmutableGrid<Coordinates, String> {
+        ImmutableGrid(data: data)
     }
 
     func part1() -> Int {
@@ -41,9 +41,9 @@ struct Day04: AdventDay {
     }
 
     private func getAccessibleForkLiftCount(
-        grid: Grid<Coordinates, String>,
+        grid: ImmutableGrid<Coordinates, String>,
         removeFromGridWhenCounted: Bool
-    ) -> (result: Int, grid: Grid<Coordinates, String>) {
+    ) -> (result: Int, grid: ImmutableGrid<Coordinates, String>) {
         var result = 0
         var grid = grid
         for (coordinates, value) in grid.values where value == toiletPaper {

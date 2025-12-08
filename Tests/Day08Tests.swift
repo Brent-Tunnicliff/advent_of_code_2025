@@ -30,7 +30,8 @@ struct Day08Tests {
 
     @Test
     func testPart1() {
-        let challenge = Day08(data: testData)
+        var challenge = Day08(data: testData)
+        challenge.partOneLimit = 10
         #expect(challenge.part1() == 40)
     }
 

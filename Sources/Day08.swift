@@ -7,6 +7,7 @@ import Foundation
 /// <https://adventofcode.com/2025/day/8>.
 struct Day08: AdventDay {
     let data: String
+    var partOneLimit = 1000
 
     private var junctionBoxLocations: [ThreeDimensionalCoordinates] {
         var junctionBoxLocations: [ThreeDimensionalCoordinates] = []
@@ -25,16 +26,20 @@ struct Day08: AdventDay {
         return junctionBoxLocations
     }
 
+    init(data: String) {
+        self.data = data
+    }
+
     func part1() -> Int {
+        let limit = partOneLimit
         let junctionBoxLocations = self.junctionBoxLocations
-        let limit = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil ? 1000 : 10
         let allConnections = junctionBoxLocations.enumerated().flatMap { location in
             junctionBoxLocations.dropFirst(location.offset + 1).map {
                 Connection(location.element, $0)
             }
         }.sorted(by: { $0.distance < $1.distance })
 
-        let closestConnections = allConnections.dropLast(allConnections.count - limit)
+        let closestConnections = allConnections.dropLast(max(allConnections.count - limit, 0))
         var linkedConnections: [LinkedConnections] = []
         for connection in closestConnections {
             let existingConnections = linkedConnections.filter {

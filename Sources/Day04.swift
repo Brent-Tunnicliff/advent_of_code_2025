@@ -3,6 +3,7 @@
 import AOCHelper
 import Algorithms
 
+/// <https://adventofcode.com/2025/day/4>.
 struct Day04: AdventDay {
     let data: String
     private let neighboringToiletPaperCountLimit = 4

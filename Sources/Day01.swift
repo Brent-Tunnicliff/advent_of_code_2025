@@ -3,6 +3,7 @@
 import AOCHelper
 import Algorithms
 
+/// <https://adventofcode.com/2025/day/1>.
 struct Day01: AdventDay {
     let data: String
     private let rangerOfClicksPerRotation = 0..<100

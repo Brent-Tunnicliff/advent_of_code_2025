@@ -3,6 +3,7 @@
 import AOCHelper
 import Algorithms
 
+/// <https://adventofcode.com/2025/day/2>.
 struct Day02: AdventDay {
     let data: String
 

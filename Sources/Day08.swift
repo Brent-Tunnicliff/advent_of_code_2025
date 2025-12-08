@@ -87,7 +87,7 @@ struct Day08: AdventDay {
 
         var result = 0
         var linkedConnections: [LinkedConnections] = []
-        for (offset, connection) in allConnections.enumerated() {
+        for connection in allConnections {
             let existingConnections = linkedConnections.filter {
                 $0.overlaps(connection: connection)
             }

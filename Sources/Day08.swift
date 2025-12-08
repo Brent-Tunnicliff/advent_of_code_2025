@@ -77,8 +77,56 @@ struct Day08: AdventDay {
         }
     }
 
-//    func part2() -> Int {
-//    }
+    func part2() -> Int {
+        let junctionBoxLocations = self.junctionBoxLocations
+        let allConnections = junctionBoxLocations.enumerated().flatMap { location in
+            junctionBoxLocations.dropFirst(location.offset + 1).map {
+                Connection(location.element, $0)
+            }
+        }.sorted(by: { $0.distance < $1.distance })
+
+        var result = 0
+        var linkedConnections: [LinkedConnections] = []
+        for (offset, connection) in allConnections.enumerated() {
+            let existingConnections = linkedConnections.filter {
+                $0.overlaps(connection: connection)
+            }
+
+            guard !existingConnections.isEmpty else {
+                linkedConnections.append(LinkedConnections(connections: [connection]))
+                continue
+            }
+
+            if existingConnections.count == 1 {
+                existingConnections.first?.add(connection)
+            } else {
+                // merge the connections together
+                let firstConnection = existingConnections[0]
+                for otherConnection in existingConnections.dropFirst() {
+                    for connectionToMerge in otherConnection.connections {
+                        firstConnection.add(connectionToMerge)
+                    }
+
+                    linkedConnections = linkedConnections.filter {
+                        $0.connections != otherConnection.connections
+                    }
+                }
+            }
+
+            guard
+                linkedConnections.count == 1,
+                let linkedCoordinates = linkedConnections.first?.connections.flatMap({ [$0.first, $0.second] }).toSet(),
+                linkedCoordinates.count == junctionBoxLocations.count
+            else {
+                continue
+            }
+
+            result = connection.first.x * connection.second.x
+            break
+        }
+
+        return result
+    }
 }
 
 private struct Connection: Equatable {

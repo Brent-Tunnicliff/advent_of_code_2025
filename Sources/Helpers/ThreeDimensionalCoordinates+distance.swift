@@ -12,3 +12,12 @@ extension ThreeDimensionalCoordinates {
         return Int(Double(dx * dx + dy * dy + dz * dz).squareRoot())
     }
 }
+
+extension Coordinates {
+    /// Calculates distance using `Euclidean distance`.
+    func distance(to other: Coordinates) -> Int {
+        let dx = other.x - x
+        let dy = other.y - y
+        return Int(Double(dx * dx + dy * dy).squareRoot())
+    }
+}

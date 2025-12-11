@@ -54,10 +54,6 @@ struct Day09: AdventDay {
 
         return largestArea
     }
-
-//    func part2() -> Int {
-//        -1
-//    }
 }
 
 extension [Coordinates] {

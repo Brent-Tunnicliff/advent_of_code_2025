@@ -21,10 +21,4 @@ struct Day09Tests {
         let challenge = Day09(data: testData)
         #expect(challenge.part1() == 50)
     }
-
-//    @Test
-//    func testPart2() async {
-//        let challenge = Day09(data: testData)
-//        #expect(challenge.part2() == )
-//    }
 }

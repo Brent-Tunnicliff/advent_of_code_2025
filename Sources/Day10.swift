@@ -112,10 +112,6 @@ struct Day10: AdventDay {
 
         return result
     }
-
-//    func part2() -> Int {
-//        -1
-//    }
 }
 
 private struct Machine {

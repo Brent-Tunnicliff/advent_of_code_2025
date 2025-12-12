@@ -26,7 +26,6 @@ struct Day11: AdventDay {
         calculatePaths(
             device: "you",
             serverRack: serverRack,
-            cache: SimpleCache<String, Int>(),
             history: ["you"]
         )
     }
@@ -34,7 +33,6 @@ struct Day11: AdventDay {
     private func calculatePaths(
         device: String,
         serverRack: ServerRack,
-        cache: SimpleCache<String, Int>,
         history: [String]
     ) -> Int {
         let outputs = serverRack[device]
@@ -47,20 +45,13 @@ struct Day11: AdventDay {
                 continue
             }
 
-            if let cachedValue = cache[output] {
-                result += cachedValue
-                continue
-            }
-
             result += calculatePaths(
                 device: output,
                 serverRack: serverRack,
-                cache: cache,
                 history: history + [device]
             )
         }
 
-        cache[device] = result
         return result
     }
 }
@@ -76,9 +67,4 @@ private final class ServerRack {
     subscript(_ key: String) -> [String]? {
         values[key]
     }
-}
-
-private struct QueueState {
-    let device: String
-    let history: [String]
 }
